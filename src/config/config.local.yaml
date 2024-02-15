@@ -1,0 +1,15 @@
+ENV: 'local'
+
+JWT_SECRET: 'thisisajwtsecretkey'
+
+HTTP:
+  HOST: 'localhost'
+  PORT: 6583
+
+DATABASE:
+  TYPE: 'mysql'
+  HOST: '127.0.0.1'
+  USERNAME: 'test'
+  PASSWORD: 'test'
+  PORT: 3306
+  NAME: 'test'
