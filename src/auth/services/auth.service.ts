@@ -43,7 +43,6 @@ export class AuthService {
   }
 
   async logout(dto: LogoutReqDto): Promise<void> {
-    // 검증
     let payloadAccess: ITokenPayload;
     let payloadRefresh: ITokenPayload;
 
