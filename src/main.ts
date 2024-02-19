@@ -2,9 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { BusinessExceptionFilter } from './exception/BesinessExceptionFilter';
 import { ConfigService } from '@nestjs/config';
+import { setSwagger } from './app.swagger';
+import { getNestOptions } from './app.options';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule); // 옵션 추가: 로깅, cors
+  const app = await NestFactory.create(AppModule, getNestOptions()); // 옵션 추가: 로깅, cors
   app.useGlobalFilters(new BusinessExceptionFilter());
 
   const configService = app.get(ConfigService);
@@ -14,6 +16,8 @@ async function bootstrap() {
 
   console.log(`env: ${env}\tport: ${port}\tserviceName: ${serviceName}`);
 
+  setSwagger(app);
+  app.enableCors();
   await app.listen(port);
 }
 bootstrap();
