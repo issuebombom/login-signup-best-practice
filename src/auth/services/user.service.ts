@@ -23,7 +23,7 @@ export class UserService {
       throw new BusinessException(
         'user',
         `${email} already exists`,
-        `${email} already exists`,
+        `${email} 계정이 이미 존재합니다.`,
         HttpStatus.BAD_REQUEST,
       );
     }

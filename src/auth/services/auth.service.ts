@@ -59,7 +59,7 @@ export class AuthService {
       throw new BusinessException(
         'auth',
         'invalid-token',
-        'invalid-token',
+        '토큰이 유효하지 않습니다.',
         HttpStatus.UNAUTHORIZED,
       );
     }
@@ -93,7 +93,7 @@ export class AuthService {
         throw new BusinessException(
           'user',
           'user-not-found',
-          'user-not-found',
+          '해당 유저를 찾을 수 없습니다.',
           HttpStatus.UNAUTHORIZED,
         );
       }
@@ -104,7 +104,7 @@ export class AuthService {
       throw new BusinessException(
         'auth',
         'invalid-refresh-token',
-        'invalid-refresh-token',
+        '토큰이 만료되어 재로그인이 필요합니다.',
         HttpStatus.UNAUTHORIZED,
       );
     }
@@ -112,15 +112,28 @@ export class AuthService {
 
   private async validateUser(email: string, plainPassword: string) {
     const user = await this.userRepository.findOne({ where: { email } });
-    if (user && (await argon2.verify(user.password, plainPassword))) {
-      return user;
+    if (!user) {
+      throw new BusinessException(
+        'auth',
+        'user-not-found',
+        '유저를 찾을 수 없습니다.',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
-    throw new BusinessException(
-      'auth',
-      'invalid-credentials',
-      'invalid-credentials',
-      HttpStatus.UNAUTHORIZED,
+    const verifyPasswordResult = await argon2.verify(
+      user.password,
+      plainPassword,
     );
+    if (!verifyPasswordResult) {
+      throw new BusinessException(
+        'auth',
+        'invalid-credentials',
+        '비밀번호가 올바르지 않습니다.',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
+    return user;
   }
 
   private createTokenPayload(userId: string): ITokenPayload {
