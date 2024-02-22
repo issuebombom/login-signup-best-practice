@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { BusinessException, ErrorDomain } from './BusinessException';
+import { Request, Response } from 'express';
 
 export class ApiError {
   id: string;
@@ -48,5 +49,18 @@ export class BusinessExceptionFilter implements ExceptionFilter {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    const ctx = host.switchToHttp();
+    const request = ctx.getRequest<Request>();
+    const response = ctx.getResponse<Response>();
+
+    this.logger.error(
+      `exception: ${JSON.stringify({
+        path: request.url,
+        ...body,
+      })}`,
+    );
+
+    response.status(status).json(body);
   }
 }
