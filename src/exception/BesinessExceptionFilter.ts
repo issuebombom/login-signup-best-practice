@@ -13,6 +13,7 @@ export class ApiError {
   id: string;
   domain: ErrorDomain;
   message: string;
+  apiMessage?: string;
   timestamp: Date;
 }
 
@@ -30,6 +31,7 @@ export class BusinessExceptionFilter implements ExceptionFilter {
         id: exception.id,
         domain: exception.domain,
         message: exception.message,
+        apiMessage: exception.apiMessage,
         timestamp: exception.timestamp,
       };
     } else if (exception instanceof HttpException) {
@@ -49,7 +51,6 @@ export class BusinessExceptionFilter implements ExceptionFilter {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
     const ctx = host.switchToHttp();
     const request = ctx.getRequest<Request>();
     const response = ctx.getResponse<Response>();
@@ -60,7 +61,6 @@ export class BusinessExceptionFilter implements ExceptionFilter {
         ...body,
       })}`,
     );
-
-    response.status(status).json(body);
+    response.status(status).json({...body});
   }
 }
