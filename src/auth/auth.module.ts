@@ -9,6 +9,7 @@ import { AuthService } from './services/auth.service';
 import { AccessToken } from './entities/access-token.entity';
 import { RefreshToken } from './entities/refresh-token.entity';
 import { TokenBlacklist } from './entities/token-blacklist.entity';
+import { JwtAccessStretegy } from './strategies/jwt-access.strategy';
 
 @Module({
   imports: [
@@ -26,6 +27,6 @@ import { TokenBlacklist } from './entities/token-blacklist.entity';
     TypeOrmModule.forFeature([User, AccessToken, RefreshToken, TokenBlacklist]),
   ],
   controllers: [AuthController],
-  providers: [UserService, AuthService],
+  providers: [UserService, AuthService, JwtAccessStretegy],
 })
 export class AuthModule {}
