@@ -139,7 +139,7 @@ export class AuthService {
   private createTokenPayload(userId: string): ITokenPayload {
     return {
       sub: userId,
-      iat: Date.now(),
+      iat: Math.floor(Date.now() / 1000),
       jti: uuidv4(),
     };
   }
